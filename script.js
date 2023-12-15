@@ -8,13 +8,6 @@ function playSound(soundId) {
     sound.play();
 
 }
-function endGame(winner) {
-
-
-    if (winner) {
-        document.getElementById('gameOverSound').play(); // Reproduce el sonido de final de la partida
-    }
-}
 
 function placeMarker(cell) {
     const index = Array.from(cell.parentNode.children).indexOf(cell);
@@ -29,18 +22,48 @@ function placeMarker(cell) {
             playSound('barkSound'); // Reproduce el sonido del perro
         }
 
-
         if (checkWinner()) {
-            alert(`Player ${currentPlayer} wins!`);
+            showModal(`${currentPlayer} wins!`);
         } else if (!gameBoard.includes('')) {
-            alert('It\'s a draw!');
+            showModal('It\'s a draw!');
         } else {
-            currentPlayer = currentPlayer === '😺' ? '🐶' : '😺'; // 🐶 representa una cara de perro
+            currentPlayer = currentPlayer === '😺' ? '🐶' : '😺';
         }
     }
 }
 
-// Resto del código permanece igual
+function closeModal() {
+    const modal = document.getElementById('myModal');
+    modal.style.display = 'none';
+}
+function showModal(message) {
+    const modal = document.getElementById('myModal');
+    const modalContent = document.querySelector('.modal-content');
+    const modalMessage = document.getElementById('modalMessage');
+    modalMessage.textContent = message;
+
+    // Muestra el modal con transición
+    modal.style.display = 'block';
+    // Oculta el modal después de 2 segundos
+    setTimeout(function () {
+        closeModal();
+    }, 2000);
+    setTimeout(function () {
+        modalContent.style.opacity = '1';
+    }, 10); // Espera un breve momento antes de cambiar la opacidad
+}
+
+function closeModal() {
+    const modal = document.getElementById('myModal');
+    const modalContent = document.querySelector('.modal-content');
+
+    // Oculta el modal con transición
+    modalContent.style.opacity = '0';
+    setTimeout(function () {
+        modal.style.display = 'none';
+    }, 500); // Espera a que termine la transición antes de ocultar completamente el modal
+}
+
 
 function checkWinner() {
 
