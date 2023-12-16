@@ -23,7 +23,7 @@ function placeMarker(cell) {
         }
 
         if (checkWinner()) {
-            showModal(`${currentPlayer} wins!`);
+            showModal(`${currentPlayer} win!`);
         } else if (!gameBoard.includes('')) {
             showModal('It\'s a draw!');
         } else {
@@ -121,5 +121,16 @@ function toggleSound() {
     isSoundOn = !isSoundOn;
 }
 
+function startGame() {
+    const titleContainer = document.querySelector('.title-container');
+    const gameContainer = document.querySelector('.container');
 
+    playSound('meowSound');
 
+    // Oculta la pantalla de título y muestra el juego
+    titleContainer.style.display = 'none';
+    gameContainer.style.display = 'block';
+
+    // Lógica para iniciar el juego
+    resetGame();
+}

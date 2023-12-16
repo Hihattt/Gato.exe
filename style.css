@@ -17,7 +17,19 @@ body {
 }
 
 h1 {
+    text-align: center;
+}
+
+.logo-container {
     margin-bottom: 20px;
+}
+
+.logo {
+    width: 100px;
+    /* Ajusta el tamaño según tus necesidades */
+    height: auto;
+    display: block;
+    margin: 0 auto;
 }
 
 .board {
@@ -86,11 +98,22 @@ button:hover {
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 10%;
+    border-radius: 20px;
+    width: 20%;
     opacity: 0;
     /* Inicialmente, el modal está invisible */
     transition: opacity 0.5s ease;
     /* Añade una transición de opacidad */
+}
+
+.modal-content p {
+    font-size: 30px;
+}
+
+@media (max-width: 468px) {
+    .modal-content {
+        width: 50%;
+    }
 }
 
 .close {
@@ -105,4 +128,9 @@ button:hover {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+.container {
+    display: none;
+    text-align: center;
 }
