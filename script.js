@@ -47,6 +47,9 @@ function showModal(message) {
     // Oculta el modal después de 2 segundos
     setTimeout(function () {
         closeModal();
+        setTimeout(function () {
+            restartGame();
+        }, 500);
     }, 2000);
     setTimeout(function () {
         modalContent.style.opacity = '1';
@@ -125,12 +128,59 @@ function startGame() {
     const titleContainer = document.querySelector('.title-container');
     const gameContainer = document.querySelector('.container');
 
-    playSound('meowSound');
+    playBackgroundMusic();
 
-    // Oculta la pantalla de título y muestra el juego
+    playSound('meow2');
+
+
     titleContainer.style.display = 'none';
     gameContainer.style.display = 'block';
 
-    // Lógica para iniciar el juego
+
     resetGame();
 }
+
+function startAI() {
+    showModal('Pronto vendrá modo vs IA. Por favor, espera...');
+}
+
+function goToHome() {
+    const titleContainer = document.querySelector('.title-container');
+    const gameContainer = document.querySelector('.container');
+
+    playSound('meowSound');
+
+    backgroundMusic.currentTime = 0;
+
+    // Muestra la pantalla de título y oculta el juego
+    titleContainer.style.display = 'block';
+    gameContainer.style.display = 'none';
+
+    // Detener música si está reproduciéndose
+    pauseBackgroundMusic();
+
+    // Reiniciar el juego
+    resetGame();
+}
+
+function restartGame() {
+    // Reiniciar el juego
+    resetGame();
+
+
+
+    // Mostrar la pantalla del juego
+    const titleContainer = document.querySelector('.title-container');
+    const gameContainer = document.querySelector('.container');
+
+    titleContainer.style.display = 'none';
+    gameContainer.style.display = 'block';
+
+    // Iniciar el juego nuevamente
+    startGame();
+}
+
+
+
+
+

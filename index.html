@@ -23,7 +23,10 @@
 
     </audio>
     <audio id="backgroundMusic" loop>
-        <source src="effects/Soundatelier - Hot Spicy.wav" type="audio/wav">
+        <source src="effects/comedy-cinematic-inspiring-125964.mp3" type="audio/wav">
+    </audio>
+    <audio id="meow2">
+        <source src="effects/meow2.mp3" type="audio/wav">
     </audio>
 
     <div class="title-container">
@@ -31,9 +34,16 @@
             <img src="effects/happy.png" alt="Logo del juego" class="logo">
         </div>
         <h1>Gato.exe</h1>
-        <button onclick="startGame()">Iniciar Juego</button>
+        <button onclick="startGame()" class="start"> <i class="fas fa-cat fa-3x"></i> vs <i
+                class="fas fa-dog fa-3x"></i></button>
+        <button onclick="startAI()" class="start-ia"><i class="fas fa-cat fa-3x"></i> vs <i
+                class="fas fa-desktop fa-3x"></i></button>
+
     </div>
+
+
     <div class="container">
+        <button onclick="goToHome()" class="home-button"> <i class="fas fa-arrow-left"></i></button>
         <h1>Gato.exe</h1>
         <div id="board" class="board">
             <div class="cell" onclick="placeMarker(this)"></div>
