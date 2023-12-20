@@ -141,7 +141,7 @@ function startGame() {
 }
 
 function startAI() {
-    showModal('Pronto vendrá modo vs IA. Por favor, espera...');
+    showModal('vs AI mode coming soon. Please wait...');
 }
 
 function goToHome() {
