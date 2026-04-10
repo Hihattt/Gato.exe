@@ -1,147 +1,44 @@
 let currentPlayer = '😺';
 let gameBoard = ['', '', '', '', '', '', '', '', ''];
+let vsAI = false; 
+let isSoundOn = true;
 
-
-function playSound(soundId) {
-    const sound = document.getElementById(soundId);
-    sound.currentTime = 0;
-    sound.play();
-
-}
-
-function placeMarker(cell) {
-    const index = Array.from(cell.parentNode.children).indexOf(cell);
-
-    if (gameBoard[index] === '' && !checkWinner()) {
-        gameBoard[index] = currentPlayer;
-        cell.innerText = currentPlayer;
-
-        if (currentPlayer === '😺') {
-            playSound('meowSound'); // Reproduce el sonido del gato
-        } else {
-            playSound('barkSound'); // Reproduce el sonido del perro
-        }
-
-        if (checkWinner()) {
-            showModal(`${currentPlayer} win!`);
-        } else if (!gameBoard.includes('')) {
-            showModal('It\'s a draw!');
-        } else {
-            currentPlayer = currentPlayer === '😺' ? '🐶' : '😺';
-        }
-    }
-}
-
-function closeModal() {
-    const modal = document.getElementById('myModal');
-    modal.style.display = 'none';
-}
-function showModal(message) {
-    const modal = document.getElementById('myModal');
-    const modalContent = document.querySelector('.modal-content');
-    const modalMessage = document.getElementById('modalMessage');
-    modalMessage.textContent = message;
-
-    // Muestra el modal con transición
-    modal.style.display = 'block';
-    // Oculta el modal después de 2 segundos
-    setTimeout(function () {
-        closeModal();
-        setTimeout(function () {
-            restartGame();
-        }, 500);
-    }, 2000);
-    setTimeout(function () {
-        modalContent.style.opacity = '1';
-    }, 10); // Espera un breve momento antes de cambiar la opacidad
-}
-
-function closeModal() {
-    const modal = document.getElementById('myModal');
-    const modalContent = document.querySelector('.modal-content');
-
-    // Oculta el modal con transición
-    modalContent.style.opacity = '0';
-    setTimeout(function () {
-        modal.style.display = 'none';
-    }, 500); // Espera a que termine la transición antes de ocultar completamente el modal
-}
-
-
-function checkWinner() {
-
-    const winningCombinations = [
-        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-        [0, 4, 8], [2, 4, 6]             // Diagonals
-    ];
-
-    return winningCombinations.some(combination => {
-        const [a, b, c] = combination;
-        return gameBoard[a] !== '' && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c];
-    });
-}
-function resetGame() {
-    // Restablecer variables y contenido de celdas
-    currentPlayer = '😺';
-    gameBoard = ['', '', '', '', '', '', '', '', ''];
-
-    const cells = document.querySelectorAll('.cell');
-    cells.forEach(cell => {
-        cell.innerText = '';
-    });
-}
+// Variables de puntaje
+let catScore = 0;
+let opponentScore = 0;
+let drawsScore = 0;
 
 let backgroundMusic = document.getElementById('backgroundMusic');
 
-function playBackgroundMusic() {
-    backgroundMusic.play();
-}
-
-function pauseBackgroundMusic() {
-    backgroundMusic.pause();
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-
-    playBackgroundMusic();
-});
-
-let isSoundOn = true;
-
-function toggleSound() {
-    const soundButton = document.getElementById('soundButton');
-    const backgroundMusic = document.getElementById('backgroundMusic');
-
-    if (isSoundOn) {
-        pauseBackgroundMusic();
-        soundButton.innerHTML = '<img src="effects/musicoff.svg" alt="Botón de Silencio">';
-    } else {
-        playBackgroundMusic();
-        soundButton.innerHTML = '<img src="effects/music-solid.svg" alt="Botón de Sonido">';
-    }
-
-    isSoundOn = !isSoundOn;
-}
+// --- INICIO Y NAVEGACIÓN ---
 
 function startGame() {
-    const titleContainer = document.querySelector('.title-container');
-    const gameContainer = document.querySelector('.container');
-
-    playBackgroundMusic();
-
-    playSound('meow2');
-
-
-    titleContainer.style.display = 'none';
-    gameContainer.style.display = 'block';
-
-
-    resetGame();
+    vsAI = false;
+    resetScores(); 
+    setupGameDisplay();
 }
 
 function startAI() {
-    showModal('vs AI mode coming soon. Please wait...');
+    vsAI = true;
+    resetScores(); 
+    setupGameDisplay();
+}
+
+function setupGameDisplay() {
+    const titleContainer = document.querySelector('.title-container');
+    const gameContainer = document.querySelector('.container');
+    
+    // Iniciar música si el sonido está activado
+    if (isSoundOn) {
+        backgroundMusic.play().catch(e => console.log("Audio esperando interacción del usuario..."));
+    }
+    
+    playSound('meow2');
+
+    titleContainer.style.display = 'none';
+    gameContainer.style.display = 'block';
+    
+    autoResetAfterMatch();
 }
 
 function goToHome() {
@@ -149,35 +46,203 @@ function goToHome() {
     const gameContainer = document.querySelector('.container');
 
     playSound('meowSound');
+    
+    // DETENER MÚSICA AL VOLVER AL INICIO
+    backgroundMusic.pause();
+    backgroundMusic.currentTime = 0; 
 
-    backgroundMusic.currentTime = 0;
-
-    // Muestra la pantalla de título y oculta el juego
     titleContainer.style.display = 'block';
     gameContainer.style.display = 'none';
-
-    // Detener música si está reproduciéndose
-    pauseBackgroundMusic();
-
-    // Reiniciar el juego
-    resetGame();
 }
 
-function restartGame() {
-    // Reiniciar el juego
-    resetGame();
+// --- LÓGICA DEL MARCADOR ---
 
+function resetScores() {
+    catScore = 0;
+    opponentScore = 0;
+    drawsScore = 0;
+    updateScoreUI();
+}
 
+function updateScoreUI() {
+    document.getElementById('score-cat').innerText = catScore;
+    document.getElementById('score-opponent').innerText = opponentScore;
+    document.getElementById('score-draws').innerText = drawsScore;
+    
+    const label = document.getElementById('opponent-label');
+    if (label) {
+        label.innerText = vsAI ? "Robot" : "Perro";
+    }
+}
 
-    // Mostrar la pantalla del juego
-    const titleContainer = document.querySelector('.title-container');
-    const gameContainer = document.querySelector('.container');
+// --- LÓGICA DEL JUEGO ---
 
-    titleContainer.style.display = 'none';
-    gameContainer.style.display = 'block';
+function placeMarker(cell) {
+    const index = Array.from(cell.parentNode.children).indexOf(cell);
+    if (gameBoard[index] !== '' || checkWinner()) return;
 
-    // Iniciar el juego nuevamente
-    startGame();
+    executeMove(index, currentPlayer);
+
+    if (checkWinner() || !gameBoard.includes('')) {
+        checkGameStatus();
+        return;
+    }
+
+    if (vsAI) {
+        const allCells = document.querySelectorAll('.cell');
+        allCells.forEach(c => c.style.pointerEvents = 'none');
+
+        setTimeout(() => {
+            const bestMoveIndex = getBestMove();
+            executeMove(bestMoveIndex, '🤖');
+            checkGameStatus();
+            allCells.forEach(c => c.style.pointerEvents = 'auto');
+        }, 500);
+    } else {
+        currentPlayer = (currentPlayer === '😺') ? '🐶' : '😺';
+    }
+}
+
+function executeMove(index, marker) {
+    gameBoard[index] = marker;
+    const cells = document.querySelectorAll('.cell');
+    cells[index].innerText = marker;
+    
+    if (marker === '😺') playSound('meowSound');
+    else if (marker === '🐶') playSound('barkSound');
+    else playSound('meowSound'); 
+}
+
+function checkGameStatus() {
+    let result = null;
+    if (checkWinLogic(gameBoard, '😺')) { catScore++; result = "😺 win!"; }
+    else if (checkWinLogic(gameBoard, '🐶')) { opponentScore++; result = "🐶 win!"; }
+    else if (checkWinLogic(gameBoard, '🤖')) { opponentScore++; result = "🤖 win!"; }
+    else if (!gameBoard.includes('')) { drawsScore++; result = "It's a draw!"; }
+
+    if (result) {
+        updateScoreUI();
+        showModal(result);
+    }
+}
+
+function resetGame() {
+    resetScores();
+    autoResetAfterMatch();
+    if (isSoundOn) playSound('meowSound');
+}
+
+// --- IA MINIMAX ---
+
+function getBestMove() {
+    let bestScore = -Infinity;
+    let move;
+    for (let i = 0; i < 9; i++) {
+        if (gameBoard[i] === '') {
+            gameBoard[i] = '🤖';
+            let score = minimax(gameBoard, 0, false);
+            gameBoard[i] = '';
+            if (score > bestScore) { bestScore = score; move = i; }
+        }
+    }
+    return move;
+}
+
+function minimax(board, depth, isMaximizing) {
+    if (checkWinLogic(board, '🤖')) return 10 - depth;
+    if (checkWinLogic(board, '😺')) return depth - 10;
+    if (!board.includes('')) return 0;
+
+    if (isMaximizing) {
+        let bestScore = -Infinity;
+        for (let i = 0; i < 9; i++) {
+            if (board[i] === '') {
+                board[i] = '🤖';
+                let score = minimax(board, depth + 1, false);
+                board[i] = '';
+                bestScore = Math.max(score, bestScore);
+            }
+        }
+        return bestScore;
+    } else {
+        let bestScore = Infinity;
+        for (let i = 0; i < 9; i++) {
+            if (board[i] === '') {
+                board[i] = '😺';
+                let score = minimax(board, depth + 1, true);
+                board[i] = '';
+                bestScore = Math.min(score, bestScore);
+            }
+        }
+        return bestScore;
+    }
+}
+
+function checkWinLogic(board, player) {
+    const winPatterns = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    return winPatterns.some(p => board[p[0]] === player && board[p[1]] === player && board[p[2]] === player);
+}
+
+function checkWinner() {
+    return checkWinLogic(gameBoard, '😺') || checkWinLogic(gameBoard, '🐶') || checkWinLogic(gameBoard, '🤖');
+}
+
+// --- UI Y MODALES ---
+
+function showModal(message) {
+    const modal = document.getElementById('myModal');
+    const modalContent = document.querySelector('.modal-content');
+    const modalMessage = document.getElementById('modalMessage');
+    
+    modalMessage.textContent = message;
+    modal.style.display = 'block';
+    setTimeout(() => { modalContent.style.opacity = '1'; }, 10);
+
+    setTimeout(() => {
+        modalContent.style.opacity = '0';
+        setTimeout(() => {
+            modal.style.display = 'none';
+            autoResetAfterMatch();
+        }, 500);
+    }, 2500);
+}
+
+function autoResetAfterMatch() {
+    gameBoard = ['', '', '', '', '', '', '', '', ''];
+    currentPlayer = '😺';
+    document.querySelectorAll('.cell').forEach(cell => {
+        cell.innerText = '';
+        cell.style.pointerEvents = 'auto';
+    });
+}
+
+// --- SONIDO Y MÚSICA ---
+
+function playSound(soundId) {
+    if (!isSoundOn) return; 
+    const sound = document.getElementById(soundId);
+    if (sound) {
+        sound.currentTime = 0;
+        sound.play().catch(e => {});
+    }
+}
+
+function toggleSound() {
+    const soundButton = document.getElementById('soundButton');
+    
+    if (isSoundOn) {
+        backgroundMusic.pause();
+        soundButton.innerHTML = '<img src="effects/music-off.svg" alt="Silencio">';
+        isSoundOn = false;
+    } else {
+        isSoundOn = true;
+        // Solo intentamos reproducir si estamos en la pantalla de juego
+        const gameContainer = document.querySelector('.container');
+        if (gameContainer.style.display === 'block') {
+            backgroundMusic.play().catch(e => {});
+        }
+        soundButton.innerHTML = '<img src="effects/music-solid.svg" alt="Sonido">';
+    }
 }
 
 
