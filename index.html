@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link rel="shortcut icon" href="effects/cat-logo-removebg-preview.png" type="image/x-icon">
@@ -12,9 +12,22 @@
 </head>
 
 <body>
+    <div class="bg-animation">
+    <div class="shape shape-x">X</div>
+    <div class="shape shape-o">O</div>
+    <div class="shape shape-x">X</div>
+    <div class="shape shape-o">O</div>
+    <div class="shape shape-x">X</div>
+    <div class="shape shape-o">O</div>
+    <div class="shape shape-x">X</div>
+    <div class="shape shape-o">O</div>
+    <div class="shape shape-x">X</div>
+  
+
+</div>
     <audio id="meowSound">
 
-        <source src="effects/mew.wav" type="audio/wav">
+        <source src="effects/gatito2.mp3" type="audio/wav">
 
     </audio>
 
@@ -29,6 +42,12 @@
     <audio id="meow2">
         <source src="effects/meow2.mp3" type="audio/wav">
     </audio>
+    <audio id="robotSound">
+    <source src="effects/roboto.mp3" type="audio/mpeg">
+</audio>
+<audio id="windSound">
+    <source src="effects/corte.mp3" type="audio/mpeg">
+</audio>
 
     <div class="title-container">
         <div class="logo-container">
@@ -37,11 +56,20 @@
         <h1>GATO</h1>
         <button onclick="startGame()" class="start"> <i class="fas fa-cat fa-3x"></i> vs <i
                 class="fas fa-dog fa-3x"></i></button>
-        <button onclick="startAI()" class="start-ia"><i class="fas fa-cat fa-3x"></i> vs <i
+        <!-- <button onclick="startAI()" class="start-ia"></button> -->
+                 <div id="ai-menu">
+        <button class="start-ia" onclick="showDifficultyMenu()"><i class="fas fa-cat fa-3x"></i> vs <i
                 class="fas fa-desktop fa-3x"></i></button>
-
+    </div>
+    
+  <div id="difficulty-options" style="display: none;">
+    <button class="btn-easy" onclick="startAI('easy')">EASY</button>
+    <button class="btn-hard" onclick="startAI('hard')">HARD</button>
+    <button onclick="hideDifficultyMenu()" style="font-size: 12px; letter-spacing: 1px;">BACK</button>
+</div>
 
     </div>
+
 
 
     <div class="container">
