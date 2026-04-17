@@ -1,3 +1,4 @@
+
 let currentPlayer = '😺';
 let gameBoard = ['', '', '', '', '', '', '', '', ''];
 let vsAI = false; 
@@ -300,3 +301,5 @@ function toggleSound() {
         soundButton.innerHTML = '<img src="effects/music-solid.svg" alt="Sound">';
     }
 }
+
+
